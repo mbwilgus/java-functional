@@ -10,18 +10,28 @@ public final class Right<T, U> extends Either<T, U>{
 
     @Override
     public <V> Either<T, V> fmap(Function<U, V> func) {
-        return f.is(this, func);
+        return new Right<>(func.apply(value));
     }
 
     @Override
     public <V> Either<T, V> bind(Function<U, Either<T, V>> func) {
-        return m.is(this, func);
+        return func.apply(value);
     }
 
     @Override
-    public String get() { return value.toString(); }
+    public boolean isLeft() {
+        return false;
+    }
 
-    public U unbox() { return value; }
+    @Override
+    public boolean isRight() {
+        return true;
+    }
+
+    @Override
+    public String read() { return value.toString(); }
+
+    public U get() { return value; }
 
     @Override
     public String toString() { return "Right " + value.toString(); }
