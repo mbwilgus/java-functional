@@ -1,5 +1,6 @@
 package data;
 
+import typeclass.Applicative;
 import typeclass.Functor;
 import typeclass.Gettable;
 import typeclass.Monad;
@@ -23,6 +24,13 @@ public final class Left<T, U> extends Either<T, U> implements Gettable<T> {
 
     @Override
     public <V> Either<T, V> fmap(Function<U, V> f) {
+        return new Left<>(value);
+    }
+
+    @Override
+    public <V> Either<T, V> amap(Applicative<Either<T, ?>, Function<U, V>> f) {
+        Either<T, Function<U, V>> af = (Either<T, Function<U,V>>) f;
+        if (af.isLeft()) return new Left<>(af.projectLeft().get());
         return new Left<>(value);
     }
 
