@@ -1,7 +1,6 @@
 package data;
 
 import typeclass.Applicative;
-import typeclass.Functor;
 import typeclass.Gettable;
 import typeclass.Monad;
 
@@ -19,23 +18,23 @@ public final class Right<T, U> extends Either<T, U> implements Gettable<U> {
 
     @Override
     public String toString() {
-        return "R " +  read();
+        return "Right " +  read();
     }
 
     @Override
-    public <V> Either<T, V> fmap(Function<U, V> f) {
+    public <V> Either<T, V> fmap(Function<? super U, ? extends V> f) {
         return new Right<>(f.apply(value));
     }
 
     @Override
-    public <V> Either<T, V> amap(Applicative<Either<T, ?>, Function<U, V>> f) {
-        Either<T, Function<U, V>> af = (Either<T, Function<U,V>>) f;
+    public <V> Either<T, V> amap(Applicative<Either<T, ?>, Function<? super U, ? extends V>> f) {
+        Either<T, Function<? super U, ? extends V>> af = (Either<T, Function<? super U,? extends V>>) f;
         if (af.isLeft()) return new Left<>(af.projectLeft().get());
         return this.fmap(af.projectRight().get());
     }
 
     @Override
-    public <V> Either<T, V> bind(Function<U, ? extends Monad<Either<T, ?>, V>> f) {
+    public <V> Either<T, V> bind(Function<? super U, ? extends Monad<Either<T, ?>, ? extends V>> f) {
         return (Either<T, V>) f.apply(value);
     }
 
